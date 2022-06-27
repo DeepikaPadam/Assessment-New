@@ -10,7 +10,7 @@ const routes = [
     component: DashboardView
   },
   { name: 'DisplayDetails', path: '/details', component: DisplayDetails },
-  { name: 'SearchShow', path: '/search/:name', component: SearchShow },
+  { name: 'SearchShow', path: '/search', component: SearchShow },
 ]
 
 const router = createRouter({
