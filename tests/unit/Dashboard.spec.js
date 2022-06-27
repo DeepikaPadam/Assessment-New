@@ -1,44 +1,43 @@
 import { mount, RouterLinkStub } from '@vue/test-utils'
-import DashboardView from '@/components/Dashboard.vue'
+import DisplayDetails from '@/views/DisplayDetails.vue'
 
 describe('Mounted App', () => {
-    
   let wrapper;
-  const getData = jest.fn()
+  const getDetails = jest.fn()
+  const mockRoute = {
+    params: {
+      name: 'The Wire'
+    }
+  }
+  const mockRouter = {
+    push: jest.fn()
+  }
   beforeEach(() => {
-    wrapper = mount(DashboardView, {
+    wrapper = mount(DisplayDetails, {
       data() {
         return {
-            showList: [],
+            showName: '',
         }
       },
       global: {
+        mocks: {
+          $route: mockRoute,
+          $router: mockRouter
+        },
         stubs: {
             'router-link': RouterLinkStub,
-        }
-    },
+        },
+      }
     })
   })
-  test('DashboardView component exists', () => {
+    global.fetch = jest.fn(() => Promise.resolve({
+        json: () => Promise.resolve(getDetails)
+    }));
+  test('DisplayDetails component exists', () => {
     expect(wrapper.exists()).toBe(true)
   })
-  
-
-    global.fetch = jest.fn(() => Promise.resolve({
-        json: () => Promise.resolve(getData)
-    }));
-
-    describe('fetch data', () => {
-        let data;
-        beforeEach(async () => {
-            data = await getData();
-        });
-        it('created() should get called when component mounts.', () => {
-            let spy;
-            spy = jest.spyOn(DashboardView, 'created');
-            wrapper = mount(DashboardView);
-            expect(spy).toHaveBeenCalled();
-            spy.mockReset();
-        });
-    });
+  it('has searched for the show name called The Wire', () => {
+    wrapper.setData({ showName:'The Wire' })
+    expect(wrapper.vm.showName).toEqual('The Wire')
+  })
  })
